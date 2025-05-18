@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.ai.azure.com/documentintelligence/2024-06-01-preview/labels.json",
+  "fieldLabels": {
+    "row0_col0": {
+      "type": "string",
+      "content": "P&P2",
+      "boundingRegions": [
+        {
+          "pageNumber": 1,
+          "polygon": [
+            1.8028,
+            0.1101,
+            2.5078,
+            0.1054,
+            2.5078,
+            0.465,
+            1.8013,
+            0.4704
+          ]
+        }
+      ],
+      "spans": [
+        {
+          "offset": 5,
+          "length": 4
+        }
+      ],
+      "kind": "corrected"
+    }
+  },
+  "metadata": {
+    "displayName": "TEST_20250505_R7P4_R8P2.pdf",
+    "createdDateTime": "2025-05-12T20:43:23.252Z"
+  }
+}

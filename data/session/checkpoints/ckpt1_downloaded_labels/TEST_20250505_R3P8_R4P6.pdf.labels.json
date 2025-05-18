@@ -1,0 +1,5 @@
+{
+  "$schema": "https://schema.cognitiveservices.azure.com/formrecognizer/2021-03-01/labels.json",
+  "document": "TEST_20250505_R3P8_R4P6.pdf",
+  "labels": []
+}
