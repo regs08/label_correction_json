@@ -24,13 +24,19 @@ wheels/
 venv/
 env/
 ENV/
-.env
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+
+# Project specific
+data/output/
+*.csv
+*.json
+!bates_060325_008.csv
+!bates_060325_0007.pdf.labels.json
 
 # OS specific
 .DS_Store
@@ -58,4 +64,7 @@ logs/
 
 # Prefect
 .prefectignore
-.prefect/ 
+.prefect/
+
+# Environment variables
+.env 

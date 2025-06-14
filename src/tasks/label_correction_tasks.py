@@ -23,7 +23,7 @@ def group_labels(labels_data: Dict) -> Dict[int, Dict]:
     for entry in labels_data["labels"]:
         label = entry["label"]
         value = entry["value"][0]  # Get the first value object
-        if label.startswith("dynamic/"):
+        if label.startswith("BBOX/"):
             parts = label.split("/")
             group_idx = int(parts[1])
             field = parts[2]
@@ -58,7 +58,7 @@ def find_corrections(
                 
                 if current_text != corrected_text:
                     corrections.append({
-                        "Label": f"dynamic/{idx}/{field}",
+                        "Label": f"BBOX/{idx}/{field}",
                         "Original": current_text,
                         "Corrected": corrected_text
                     })
@@ -73,7 +73,7 @@ def reconstruct_labels(grouped_labels: Dict[int, Dict]) -> List[Dict]:
     for group_idx, fields in grouped_labels.items():
         for field, value in fields.items():
             updated_labels.append({
-                "label": f"dynamic/{group_idx}/{field}",
+                "label": f"BBOX/{group_idx}/{field}",
                 "value": [value]  # Preserve the original value structure
             })
     return updated_labels
