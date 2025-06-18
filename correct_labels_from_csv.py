@@ -1,4 +1,3 @@
-
 import json
 import pandas as pd
 from pathlib import Path
@@ -65,8 +64,20 @@ def correct_labels_json(labels_json_path, ground_truth_csv_path, output_json_pat
 
 # Example usage:
 if __name__ == "__main__":
-    labels_json = "/Users/nr466/Python Projects/correct_labels_json/example_data/labels/TEST_20250505_R7P4_R8P2.pdf.labels.json"
-    ground_truth_csv = "example_data/ground_truth/TEST_gt_20250505_R7P4_R8P2.csv"
-    output_json = "CORRECTED_TEST_20250605_R8P3_R9P1.labels.json"
-    report_csv = "correction_report.csv"
-    correct_labels_json(labels_json, ground_truth_csv, output_json, report_csv)
+    # Get the current working directory
+    cwd = Path.cwd()
+    
+    # Define paths relative to the current working directory
+    labels_json = cwd / "example_data/labels/TEST_20250505_R7P4_R8P2.pdf.labels.json"
+    ground_truth_csv = cwd / "example_data/ground_truth/TEST_gt_20250505_R7P4_R8P2.csv"
+    output_json = cwd / "CORRECTED_TEST_20250605_R8P3_R9P1.labels.json"
+    report_csv = cwd / "correction_report.csv"
+    
+    # Convert Path objects to strings for the function call
+    correct_labels_json(
+        str(labels_json),
+        str(ground_truth_csv),
+        str(output_json),
+        str(report_csv)
+
+    )
