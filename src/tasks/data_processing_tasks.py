@@ -21,8 +21,8 @@ def process_csv_data(df: pd.DataFrame, settings: Settings) -> Dict[int, Dict[str
             # Handle blank spaces and NaN values
             if pd.isna(row[col]) or value.strip() == "":
                 value = ""
-            # Handle zeros
-            elif value == "0":
+            # Handle zeros (both "0" and "0.0")
+            elif value == "0" or value == "0.0":
                 value = "-"
             row_data[col] = value
         
