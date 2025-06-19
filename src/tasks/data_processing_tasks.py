@@ -41,7 +41,7 @@ def update_json_data(
     changes_made = 0
     
     for entry in labels_data.labels:
-        if entry.label.startswith("BBOX/"):
+        if entry.label.startswith("DynamicTable/"):
             parts = entry.label.split("/")
             if len(parts) == 3:
                 row_idx = int(parts[1])
