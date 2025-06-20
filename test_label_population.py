@@ -6,12 +6,12 @@ def main():
     # Get the current working directory
     cwd = Path.cwd()
     
-    # Define paths
-    input_csv = cwd / "ground_truth_csvs/vgb_061225_3501_3505.csv"
-    input_json = cwd / "templates/adjusted/template_third_place.pdf.labels.json"
+    # Define paths - use direct Path objects for absolute paths
+    input_csv = Path("/Users/nr466/Python Projects/label_correction_json/synthetic_data/ground_truth/syn_mixed01.csv")
+    input_json = Path("/Users/nr466/Python Projects/label_correction_json/synthetic_data/syn_templates/syn_template01.pdf.labels.json")
     
     # Generate output filename from CSV filename
-    output_json = cwd / "output" / f"{input_csv.stem.replace('_gt_', '')}.pdf.labels.json"
+    output_json = cwd / "output" / f"{input_csv.stem.replace('_gt_', '').lower()}.pdf.labels.json"
     
     # Create settings
     settings = Settings(

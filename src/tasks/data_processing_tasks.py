@@ -49,6 +49,8 @@ def update_json_data(
                 
                 if row_idx in processed_csv and field in processed_csv[row_idx]:
                     new_value = processed_csv[row_idx][field]
+                    # Convert new_value to lowercase
+                    new_value = new_value.lower()
                     # Always update if the new value is an empty string
                     if new_value == "" or entry.value[0].text != new_value:
                         print(f"Updating {entry.label}:")

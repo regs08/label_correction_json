@@ -30,12 +30,12 @@ def label_population_flow(
         settings = Settings(
             input_csv_path=input_csv_path,
             input_json_path=input_json_path,
-            output_json_path=output_json_path or input_json_path.parent / f"updated_{input_json_path.name}"
+            output_json_path=output_json_path or input_json_path.parent / f"updated_{input_json_path.name.lower()}"
         )
     
     # Set default output path if not provided
     if output_json_path is None:
-        output_json_path = input_json_path.parent / f"updated_{input_json_path.name}"
+        output_json_path = input_json_path.parent / f"updated_{input_json_path.name.lower()}"
     
     # Validate input files
     is_valid, message = validate_input_files(input_csv_path, input_json_path)
