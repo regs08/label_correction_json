@@ -2,9 +2,27 @@ from prefect import task
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import json
+from azure.core.exceptions import ResourceExistsError
+from functools import wraps
 
 from src.utils.azure_storage import AzureStorageClient
 from src.utils.config import get_settings
+
+def no_retry_on_exists(task_func):
+    """
+    Custom decorator that disables retries for ResourceExistsError.
+    """
+    @wraps(task_func)
+    def wrapper(*args, **kwargs):
+        try:
+            return task_func(*args, **kwargs)
+        except ResourceExistsError as e:
+            # Mark this as a permanent failure to prevent retries
+            from prefect import get_run_logger
+            logger = get_run_logger()
+            logger.warning(f"Resource already exists, skipping retries: {str(e)}")
+            raise e
+    return wrapper
 
 @task(name="list_label_files", retries=3, retry_delay_seconds=5)
 def list_label_files(prefix: Optional[str] = None) -> List[str]:
@@ -103,14 +121,16 @@ def upload_corrected_label_file(corrected_data: Dict[str, Any], blob_name: str) 
     
     azure_client.upload_json_blob(settings.azure_destination_container_name, blob_name, corrected_data)
 
-@task(name="upload_label_file", retries=3, retry_delay_seconds=5)
-def upload_label_file(file_path: str, blob_name: Optional[str] = None) -> str:
+@task(name="upload_label_file", retries=0)  # Disable retries completely
+@no_retry_on_exists
+def upload_label_file(file_path: str, blob_name: Optional[str] = None, overwrite: bool = False) -> str:
     """
     Upload a single label file to Azure blob storage.
     
     Args:
         file_path: Path to the local file to upload
         blob_name: Optional name for the blob. If not provided, uses the filename
+        overwrite: Whether to overwrite existing blob (default: False)
         
     Returns:
         The name of the uploaded blob
@@ -126,12 +146,12 @@ def upload_label_file(file_path: str, blob_name: Optional[str] = None) -> str:
     with open(file_path, 'r') as f:
         data = json.load(f)
     
-    # Upload to Azure with overwrite=True
+    # Upload to Azure with overwrite parameter
     azure_client.upload_json_blob(
         settings.azure_destination_container_name,
         blob_name,
         data,
-        overwrite=True  # Always overwrite existing files
+        overwrite=overwrite
     )
     
     return blob_name

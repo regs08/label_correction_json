@@ -26,6 +26,25 @@ class Settings:
             "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10"
         ]
 
+class AzureSettings:
+    """Azure-specific settings."""
+    def __init__(self):
+        self.azure_storage_connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+        self.azure_source_container_name = os.getenv("AZURE_SOURCE_CONTAINER_NAME")
+        self.azure_destination_container_name = os.getenv("AZURE_DESTINATION_CONTAINER_NAME")
+        
+        # Validate required settings
+        if not self.azure_storage_connection_string:
+            raise ValueError("AZURE_STORAGE_CONNECTION_STRING environment variable is required")
+        if not self.azure_source_container_name:
+            raise ValueError("AZURE_SOURCE_CONTAINER_NAME environment variable is required")
+        if not self.azure_destination_container_name:
+            raise ValueError("AZURE_DESTINATION_CONTAINER_NAME environment variable is required")
+
+def get_settings() -> AzureSettings:
+    """Get Azure settings from environment variables."""
+    return AzureSettings()
+
 class SetupConfig:
     """Configuration for folder structure and session management."""
     def __init__(self, working_folder: str = "data", session_folder: str = "session", checkpoints_folder: str = "checkpoints", ground_truth_folder: str = "ground_truth"):

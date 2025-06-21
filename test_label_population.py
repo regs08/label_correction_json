@@ -7,8 +7,8 @@ def main():
     cwd = Path.cwd()
     
     # Define paths
-    input_csv = cwd / "ground_truth_csvs/vgb_061225_3501_3505.csv"
-    input_json = cwd / "templates/adjusted/template_third_place.pdf.labels.json"
+    input_csv = cwd / "vgb_training_data/gt/VGB_061225_3501_3505.csv"
+    input_json = cwd / "templates/adjusted/dyanmic_table_template.pdf.labels.json"
     
     # Generate output filename from CSV filename
     output_json = cwd / "output" / f"{input_csv.stem.replace('_gt_', '')}.pdf.labels.json"

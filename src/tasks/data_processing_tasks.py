@@ -24,6 +24,16 @@ def process_csv_data(df: pd.DataFrame, settings: Settings) -> Dict[int, Dict[str
             # Handle zeros (both "0" and "0.0")
             elif value == "0" or value == "0.0":
                 value = "-"
+            else:
+                # For non-R.P columns, convert numeric values to integers
+                if col != "R.P" and value.replace(".", "").replace("-", "").isdigit():
+                    try:
+                        # Convert to float first to handle decimals, then to int
+                        float_val = float(value)
+                        value = str(int(float_val))
+                    except (ValueError, TypeError):
+                        # If conversion fails, keep original value
+                        pass
             row_data[col] = value
         
         processed_data[idx] = row_data
