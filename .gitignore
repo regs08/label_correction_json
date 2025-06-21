@@ -67,4 +67,8 @@ logs/
 .prefect/
 
 # Environment variables
-.env 
+.env
+
+# Ignore training data and output directories
+vgb_training_data/data/
+output/ 
