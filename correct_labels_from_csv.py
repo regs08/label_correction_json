@@ -22,7 +22,9 @@ def correct_labels_json(labels_json_path, ground_truth_csv_path, output_json_pat
             parts = label.split("/")
             group_idx = int(parts[1])
             field = parts[2]
-            grouped_labels[group_idx][field] = value
+            # Convert field name to lowercase for consistency
+            field_lower = field.lower()
+            grouped_labels[group_idx][field_lower] = value
 
     # Correct text values
     corrections = []
@@ -30,23 +32,29 @@ def correct_labels_json(labels_json_path, ground_truth_csv_path, output_json_pat
         if idx not in grouped_labels:
             continue
         for field, val in row.items():
-            if field in grouped_labels[idx] and pd.notna(val):
-                current_text = grouped_labels[idx][field]["text"]
+            # Convert field name to lowercase for lookup
+            field_lower = field.lower()
+            if field_lower in grouped_labels[idx] and pd.notna(val):
+                current_text = grouped_labels[idx][field_lower]["text"]
                 corrected_text = str(val)
+                # Convert corrected_text to lowercase
+                corrected_text = corrected_text.lower()
                 if current_text != corrected_text:
                     corrections.append({
-                        "Label": f"dynamic/{idx}/{field}",
+                        "Label": f"dynamic/{idx}/{field_lower}",
                         "Original": current_text,
                         "Corrected": corrected_text
                     })
-                    grouped_labels[idx][field]["text"] = corrected_text
+                    grouped_labels[idx][field_lower]["text"] = corrected_text
 
     # Reconstruct updated labels
     updated_labels = []
     for group_idx, fields in grouped_labels.items():
         for field, val in fields.items():
+            # Convert field name to lowercase
+            field_lower = field.lower()
             updated_labels.append({
-                "label": f"dynamic/{group_idx}/{field}",
+                "label": f"dynamic/{group_idx}/{field_lower}",
                 "value": [val]
             })
 
@@ -70,7 +78,7 @@ if __name__ == "__main__":
     # Define paths relative to the current working directory
     labels_json = cwd / "example_data/labels/TEST_20250505_R7P4_R8P2.pdf.labels.json"
     ground_truth_csv = cwd / "example_data/ground_truth/TEST_gt_20250505_R7P4_R8P2.csv"
-    output_json = cwd / "CORRECTED_TEST_20250605_R8P3_R9P1.labels.json"
+    output_json = cwd / "corrected_test_20250605_r8p3_r9p1.labels.json"
     report_csv = cwd / "correction_report.csv"
     
     # Convert Path objects to strings for the function call

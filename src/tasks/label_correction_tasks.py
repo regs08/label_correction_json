@@ -27,7 +27,9 @@ def group_labels(labels_data: Dict) -> Dict[int, Dict]:
             parts = label.split("/")
             group_idx = int(parts[1])
             field = parts[2]
-            grouped_labels[group_idx][field] = value
+            # Convert field name to lowercase for consistency
+            field_lower = field.lower()
+            grouped_labels[group_idx][field_lower] = value
     return grouped_labels
 
 @task(name="find_corrections")
@@ -41,8 +43,10 @@ def find_corrections(
         if idx not in grouped_labels:
             continue
         for field, val in row.items():
-            if field in grouped_labels[idx] and pd.notna(val):
-                current_value = grouped_labels[idx][field]
+            # Convert field name to lowercase for lookup
+            field_lower = field.lower()
+            if field_lower in grouped_labels[idx] and pd.notna(val):
+                current_value = grouped_labels[idx][field_lower]
                 current_text = current_value["text"]
                 
                 # Convert ground truth value to string, preserving decimals
@@ -56,9 +60,12 @@ def find_corrections(
                 else:
                     corrected_text = str(val)
                 
+                # Convert corrected_text to lowercase
+                corrected_text = corrected_text.lower()
+                
                 if current_text != corrected_text:
                     corrections.append({
-                        "Label": f"BBOX/{idx}/{field}",
+                        "Label": f"BBOX/{idx}/{field_lower}",
                         "Original": current_text,
                         "Corrected": corrected_text
                     })
@@ -72,8 +79,10 @@ def reconstruct_labels(grouped_labels: Dict[int, Dict]) -> List[Dict]:
     updated_labels = []
     for group_idx, fields in grouped_labels.items():
         for field, value in fields.items():
+            # Convert field name to lowercase
+            field_lower = field.lower()
             updated_labels.append({
-                "label": f"BBOX/{group_idx}/{field}",
+                "label": f"BBOX/{group_idx}/{field_lower}",
                 "value": [value]  # Preserve the original value structure
             })
     return updated_labels

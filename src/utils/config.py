@@ -115,8 +115,8 @@ class CompareFilesConfig:
     def get_output_path(self, json_path: Path) -> Path:
         """Get the output path for a corrected JSON file."""
         if self.output_folder is None:
-            return json_path.parent / json_path.name
-        return self.output_folder / json_path.name
+            return json_path.parent / json_path.name.lower()
+        return self.output_folder / json_path.name.lower()
 
     def get_report_path(self, json_path: Path) -> Path:
         """Get the output path for a correction report CSV."""
